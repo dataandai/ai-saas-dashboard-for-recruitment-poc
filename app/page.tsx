@@ -1,48 +1,60 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
-  Briefcase, 
   Zap, 
-  TrendingUp, 
+  Calendar, 
+  BarChart3, 
   Search, 
-  Bell, 
   Filter, 
-  ChevronRight, 
-  Star
+  MoreVertical,
+  CheckCircle2,
+  Clock,
+  BrainCircuit
 } from 'lucide-react';
 
-const StatCard = ({ title, value, icon: Icon, trend }: any) => (
-  <div className="glass-card p-6 rounded-2xl">
-    <div className="flex justify-between items-start mb-4">
-      <div className="p-2 bg-indigo-500/10 rounded-lg">
-        <Icon className="w-6 h-6 text-indigo-400" />
-      </div>
-      <span className="text-xs font-medium text-emerald-400 flex items-center">
-        <TrendingUp className="w-3 h-3 mr-1" /> {trend}
-      </span>
-    </div>
-    <p className="text-slate-400 text-sm font-medium">{title}</p>
-    <h3 className="text-2xl font-bold mt-1">{value}</h3>
-  </div>
-);
-
 export default function Dashboard() {
+  const [candidates, setCandidates] = useState([]);
+  const [stats, setStats] = useState({ total_applicants: 0, ai_screened: 0, interviews_scheduled: 0, time_saved_hours: 0 });
+
+  useEffect(() => {
+    // In a real app, these would fetch from the FastAPI backend
+    const mockCandidates = [
+        { id: '1', name: 'Sarah Chen', role: 'Senior Frontend Engineer', match_score: 98, status: 'In Review', skills: ['React', 'TS'], ai_summary: 'Perfect architectural fit.' },
+        { id: '2', name: 'Marcus Rodriguez', role: 'Backend Lead', match_score: 92, status: 'Interviewing', skills: ['Go', 'K8s'], ai_summary: 'Distributed systems expert.' },
+        { id: '3', name: 'Aisha Patel', role: 'Product Designer', match_score: 89, status: 'Shortlisted', skills: ['Figma', 'UX'], ai_summary: 'Strong visual portfolio.' },
+    ];
+    setCandidates(mockCandidates);
+    setStats({ total_applicants: 1240, ai_screened: 1198, interviews_scheduled: 45, time_saved_hours: 320 });
+  }, []);
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-neutral-950 text-white font-sans">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/5 bg-slate-950/50 p-6 hidden md:block">
-        <div className="flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-5 h-5 fill-white text-white" />
+      <aside className="w-64 border-r border-neutral-800 p-6 flex flex-col gap-8 hidden md:flex">
+        <div className="flex items-center gap-2 px-2">
+          <div className="h-8 w-8 rounded-lg accent-gradient flex items-center justify-center">
+            <Zap size={18} fill="white" />
           </div>
-          <span className="font-bold text-xl tracking-tight">TalentAI</span>
+          <span className="font-bold text-xl tracking-tight">RecruitAI</span>
         </div>
-        
-        <nav className="space-y-1">
-          {['Dashboard', 'Candidates', 'Jobs', 'AI Insights', 'Settings'].map((item) => (
-            <a key={item} href="#" className={`flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-colors ${item === 'Dashboard' ? 'bg-indigo-600/10 text-indigo-400' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+
+        <nav className="flex flex-col gap-2">
+          {['Dashboard', 'Candidates', 'Jobs', 'Schedule', 'Analytics'].map((item, i) => (
+            <button 
+              key={item}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                i === 0 ? 'bg-neutral-800 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
+              }`}
+            >
+              {i === 0 && <BarChart3 size={18} />}
+              {i === 1 && <Users size={18} />}
+              {i === 2 && <BrainCircuit size={18} />}
+              {i === 3 && <Calendar size={18} />}
+              {i === 4 && <Zap size={18} />}
               {item}
-            </a>
+            </button>
           ))}
         </nav>
       </aside>
@@ -51,90 +63,109 @@ export default function Dashboard() {
       <main className="flex-1 p-8 overflow-y-auto">
         <header className="flex justify-between items-center mb-10">
           <div>
-            <h1 className="text-2xl font-bold">Recruitment Overview</h1>
-            <p className="text-slate-400 text-sm">Welcome back, HR Intelligence system is active.</p>
+            <h1 className="text-3xl font-bold">Recruitment Overview</h1>
+            <p className="text-neutral-400 mt-1">AI-powered insights for your hiring pipeline.</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-              <input 
-                type="text" 
-                placeholder="Search candidates..." 
-                className="bg-slate-900 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 w-64"
-              />
-            </div>
-            <button className="p-2 glass-card rounded-full relative">
-              <Bell className="w-5 h-5 text-slate-400" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+          <div className="flex gap-3">
+            <button className="bg-neutral-800 px-4 py-2 rounded-lg border border-neutral-700 hover:bg-neutral-700 transition-all">
+              Settings
+            </button>
+            <button className="accent-gradient px-4 py-2 rounded-lg font-medium shadow-lg shadow-indigo-500/20 hover:opacity-90 transition-all">
+              Create New Job
             </button>
           </div>
         </header>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <StatCard title="Total Candidates" value="1,284" icon={Users} trend="+12%" />
-          <StatCard title="Active Jobs" value="14" icon={Briefcase} trend="+2" />
-          <StatCard title="AI Interviews" value="452" icon={Zap} trend="+24%" />
-          <StatCard title="Avg Match Score" value="84%" icon={Star} trend="+5.2%" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+          {[ 
+            { label: 'Total Applicants', value: stats.total_applicants, icon: Users, color: 'text-blue-400' },
+            { label: 'AI Screened', value: stats.ai_screened, icon: BrainCircuit, color: 'text-purple-400' },
+            { label: 'Interviews', value: stats.interviews_scheduled, icon: Calendar, color: 'text-pink-400' },
+            { label: 'Hours Saved', value: stats.time_saved_hours, icon: Zap, color: 'text-yellow-400' }
+          ].map((stat, i) => (
+            <div key={i} className="glass-card p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-neutral-400 text-sm">{stat.label}</p>
+                  <h3 className="text-2xl font-bold mt-1">{stat.value.toLocaleString()}</h3>
+                </div>
+                <stat.icon size={20} className={stat.color} />
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Main List Section */}
-        <section className="glass-card rounded-2xl overflow-hidden">
-          <div className="p-6 border-b border-white/5 flex justify-between items-center">
-            <h2 className="font-semibold">Top AI-Matched Candidates</h2>
-            <button className="text-sm text-indigo-400 flex items-center hover:text-indigo-300 transition-colors font-medium">
-              View All <ChevronRight className="w-4 h-4 ml-1" />
-            </button>
+        {/* Candidates Table Area */}
+        <div className="glass-card overflow-hidden">
+          <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-900/30">
+            <h2 className="text-lg font-semibold">Top AI Matches</h2>
+            <div className="flex gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={16} />
+                <input 
+                  type="text" 
+                  placeholder="Search candidates..." 
+                  className="bg-neutral-950 border border-neutral-800 rounded-md py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                />
+              </div>
+              <button className="flex items-center gap-2 text-sm bg-neutral-800 px-3 py-1.5 rounded-md border border-neutral-700">
+                <Filter size={14} /> Filter
+              </button>
+            </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-xs text-slate-500 uppercase tracking-wider">
-                  <th className="px-6 py-4 font-semibold">Candidate</th>
-                  <th className="px-6 py-4 font-semibold">Match Score</th>
-                  <th className="px-6 py-4 font-semibold">Experience</th>
-                  <th className="px-6 py-4 font-semibold">Status</th>
-                  <th className="px-6 py-4 font-semibold">Action</th>
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-neutral-900/50 text-neutral-400 text-xs uppercase tracking-wider">
+                <tr>
+                  <th className="px-6 py-4">Candidate</th>
+                  <th className="px-6 py-4">Role</th>
+                  <th className="px-6 py-4">Match Score</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">AI Summary</th>
+                  <th className="px-6 py-4"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
-                {[ 
-                  { name: "Alex Rivera", role: "Senior Frontend Engineer", score: 98.2, exp: "8y", status: "Shortlisted" },
-                  { name: "Sarah Chen", role: "ML Engineer", score: 94.5, exp: "5y", status: "Interviewing" },
-                  { name: "Marcus Thorne", role: "Product Designer", score: 82.1, exp: "4y", status: "Applied" }
-                ].map((c, i) => (
-                  <tr key={i} className="hover:bg-white/5 transition-colors group">
+              <tbody className="divide-y divide-neutral-800">
+                {candidates.map((c) => (
+                  <tr key={c.id} className="hover:bg-neutral-900/30 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xs">
-                          {c.name.split(' ').map(n => n[0]).join('')}
+                        <div className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center font-bold text-indigo-400 group-hover:border group-hover:border-indigo-500/50 transition-all">
+                          {c.name[0]}
                         </div>
                         <div>
-                          <p className="font-medium text-sm">{c.name}</p>
-                          <p className="text-xs text-slate-500">{c.role}</p>
+                          <p className="font-medium">{c.name}</p>
+                          <div className="flex gap-1 mt-1">
+                             {c.skills.map(s => <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400">{s}</span>)}
+                          </div>
                         </div>
                       </div>
                     </td>
+                    <td className="px-6 py-4 text-neutral-300 text-sm">{c.role}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-12 bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                          <div className="bg-indigo-500 h-full" style={{ width: `${c.score}%` }}></div>
+                        <div className="w-full bg-neutral-800 h-1.5 w-24 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full accent-gradient transition-all duration-1000 ease-out"
+                            style={{ width: `${c.match_score}%` }}
+                          ></div>
                         </div>
-                        <span className="text-sm font-bold text-indigo-400">{c.score}%</span>
+                        <span className="text-sm font-bold text-indigo-400">{c.match_score}%</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-400">{c.exp}</td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                        c.status === 'Shortlisted' ? 'bg-emerald-500/10 text-emerald-400' : 
-                        c.status === 'Interviewing' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-500/10 text-slate-400'
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        c.status === 'Interviewing' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
                       }`}>
+                        {c.status === 'In Review' ? <Clock size={12} /> : <CheckCircle2 size={12} />}
                         {c.status}
                       </span>
                     </td>
+                    <td className="px-6 py-4 text-xs text-neutral-400 italic max-w-xs truncate">"{c.ai_summary}"</td>
                     <td className="px-6 py-4">
-                      <button className="text-xs bg-white text-slate-950 px-3 py-1.5 rounded-lg font-bold hover:bg-slate-200 transition-colors opacity-0 group-hover:opacity-100">
-                        View Profile
+                      <button className="text-neutral-500 hover:text-white">
+                        <MoreVertical size={18} />
                       </button>
                     </td>
                   </tr>
@@ -142,7 +173,7 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );
